@@ -12,17 +12,11 @@ export default class Camera extends PureComponent {
             this.camera = ref;
           }}
           style={styles.preview}
-          type={RNCamera.Constants.Type.back}
-          flashMode={RNCamera.Constants.FlashMode.on}
+          type={RNCamera.Constants.Type.front}
+          flashMode={RNCamera.Constants.FlashMode.off}
           androidCameraPermissionOptions={{
             title: 'Permissão para usar a câmera',
             message: 'Você nos autoriza a usar a câmera?',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancelar',
-          }}
-          androidRecordAudioPermissionOptions={{
-            title: 'Permissão para gravar áudio',
-            message: 'Você nos autoriza a gravar áudio?',
             buttonPositive: 'Ok',
             buttonNegative: 'Cancelar',
           }}
@@ -32,7 +26,7 @@ export default class Camera extends PureComponent {
         />
         <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-            <Text style={{ fontSize: 14 }}> Foto </Text>
+            <Text style={{ fontSize: 18, color:'#29b6f6', fontWeight: 'bold' }}> FOTO </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -62,7 +56,7 @@ const styles = StyleSheet.create({
   capture: {
     flex: 0,
     backgroundColor: '#fff',
-    borderRadius: 5,
+    borderRadius: 20,
     padding: 15,
     paddingHorizontal: 20,
     alignSelf: 'center',

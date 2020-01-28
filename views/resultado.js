@@ -2,31 +2,38 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
 import Scanning from '../components/scanning';
+import ResultadoNegativo from '../components/resultado-negativo';
+import ResultadoPositivo from '../components/resultado-positivo';
 
 export default class Resultado extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      resultado: 'carregando...',
+      resultado: null,
+      erro: false
     };
   }
 
   componentDidMount() {
     let data = this.props.navigation.getParam('data');
     axios
-      .post('https://af3b2085.ngrok.io', {
+      .post('https://api-ocara.herokuapp.com/', {
         foto: data.base64,
       })
       .then(response => {
+        
+        console.log(response.data)
         this.setState({loading: false});
-        if (response.length) {
-          this.setState({resultado: 'Você NÃO é o cara'});
+        if (response.data.length > 0) {
+          this.setState({resultado: <ResultadoNegativo />});
         } else {
-          this.setState({resultado: 'Você é o cara'});
+          this.setState({resultado: <ResultadoPositivo />});
         }
       })
       .catch(err => {
+        this.setState({loading: false});
+        this.setState({erro: true});
         this.setState({resultado: 'Erro'});
         console.log(err);
       });
@@ -38,12 +45,18 @@ export default class Resultado extends Component {
           <Scanning />
         </View>
       );
+    } else if(this.state.loading === false && this.state.erro === false) {
+      return (
+        this.state.resultado
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text style={{color:'white', fontSize: 25, margin:16}}>Não foi possível fazer a verificação, ente novamente.</Text>
+        </View>
+      );
     }
-    return (
-      <View style={styles.container}>
-        <Text style={{color:'white', fontSize: 25}}>{this.state.resultado}</Text>
-      </View>
-    );
+   
   }
 }
 
@@ -52,6 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     alignContent: 'center',
-    color: 'white'
+    color: 'white',
+    justifyContent: 'center'
   },
 });
